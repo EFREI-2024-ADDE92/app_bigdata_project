@@ -11,7 +11,7 @@ jobs:
 
   - script: |
       # Étape 1: Entraînement du modèle et exportation
-      python train_model.py  # Assurez-vous d'avoir un script pour l'entraînement et l'exportation
+      python model.py  # Assurez-vous d'avoir un script pour l'entraînement et l'exportation
       # Utilisez joblib.dump() pour exporter le modèle
 
     displayName: 'Train Model and Export'
@@ -20,7 +20,7 @@ jobs:
 
   - script: |
       # Étape 2: Intégration du modèle dans une API
-      python create_api.py  # Assurez-vous d'avoir un script pour l'intégration de l'API
+      python app.py  # Assurez-vous d'avoir un script pour l'intégration de l'API
 
     displayName: 'Integrate Model into API'
 
@@ -52,7 +52,11 @@ jobs:
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az containerapp create ...  # Remplacez par la commande réelle de déploiement
+        az containerapp create --resource-group ADDE92-CTP \
+                                --name groupe7 \
+                                --image efreibigdata.azurecr.io/iris-api:latest \
+                                --cpu 0.75 \
+                                --memory 1.5 
 
   - script: echo 'Starting Autoscaling Configuration'
 
