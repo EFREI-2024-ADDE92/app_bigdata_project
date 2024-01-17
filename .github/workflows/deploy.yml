@@ -1,0 +1,41 @@
+name: Deploy to Azure Container App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      REGISTRY_LOGIN_SERVER: efreibigdata.azurecr.io
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      RESOURCE_GROUP: ADDE92-CTP
+      AZURE_APP_NAME: iris-knn-app
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Build and push Docker image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build . -t $REGISTRY_LOGIN_SERVER/iris-knn-app:${{ github.sha }}
+          docker push $REGISTRY_LOGIN_SERVER/iris-knn-app:${{ github.sha }}
+
+      - name: 'Deploy to Azure Container App'
+        run: |
+          az container create --resource-group $RESOURCE_GROUP --name $AZURE_APP_NAME --image $REGISTRY_LOGIN_SERVER/iris-knn-app:${{ github.sha }} --cpu 0.5 --memory 0.5 --registry-login-server $REGISTRY_LOGIN_SERVER --registry-username $REGISTRY_USERNAME --registry-password $REGISTRY_PASSWORD --dns-name-label iris-knn-app
