@@ -28,4 +28,4 @@ jobs:
         uses: azure/container-apps-deploy-action@v1
         with:
           appSourcePath: ${{ github.workspace }}
-          acrName: irisGrp7
+          acrName: efreibigdata
