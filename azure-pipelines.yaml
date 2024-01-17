@@ -1,0 +1,76 @@
+trigger:
+- main  # Déclencher la pipeline à chaque modification dans la branche principale
+
+jobs:
+- job: TrainAndDeploy
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - script: echo 'Starting Model Training and Deployment'
+
+  - script: |
+      # Étape 1: Entraînement du modèle et exportation
+      python train_model.py  # Assurez-vous d'avoir un script pour l'entraînement et l'exportation
+      # Utilisez joblib.dump() pour exporter le modèle
+
+    displayName: 'Train Model and Export'
+
+  - script: echo 'Starting API Integration'
+
+  - script: |
+      # Étape 2: Intégration du modèle dans une API
+      python create_api.py  # Assurez-vous d'avoir un script pour l'intégration de l'API
+
+    displayName: 'Integrate Model into API'
+
+  - script: echo 'Starting Docker Image Build'
+
+  - task: Docker@2
+    displayName: 'Build Docker Image'
+    inputs:
+      command: 'build'
+      dockerfile: 'Dockerfile'  # Assurez-vous d'avoir un Dockerfile pour votre API
+      tags: 'efreibigdata.azurecr.io/iris-api:latest'
+
+  - script: echo 'Starting Docker Image Push to ACR'
+
+  - task: Docker@2
+    displayName: 'Push Docker Image to ACR'
+    inputs:
+      command: 'push'
+      containerRegistry: 'efreibigdata.azurecr.io'
+      repository: 'iris-api'
+      tags: 'latest'
+
+  - script: echo 'Starting Deployment to Azure Container App'
+
+  - task: AzureCLI@2
+    displayName: 'Deploy to Azure Container App'
+    inputs:
+      azureSubscription: 'ADDE92-CTP'  # Nom de votre abonnement Azure
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az containerapp create ...  # Remplacez par la commande réelle de déploiement
+
+  - script: echo 'Starting Autoscaling Configuration'
+
+  - task: AzureCLI@2
+    displayName: 'Configure Autoscaling'
+    inputs:
+      azureSubscription: 'ADDE92-CTP'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        # Étape 4: Configuration de l'autoscaling
+        # Utilisez la commande Azure CLI pour configurer l'autoscaling
+
+  - script: echo 'Starting Load Test'
+
+  - script: |
+      # Étape 5: Réalisation d'un test de charge
+      # Utilisez l'outil de test de charge de votre choix (par exemple, Apache JMeter, Locust, etc.)
+      # Assurez-vous que l'API est en cours d'exécution avant de lancer le test
+
+    displayName: 'Run Load Test'
