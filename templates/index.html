@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Prediction</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+<h1>Flower Prediction</h1>
+
+<form id="predictionForm">
+    <label for="sepalLength">Longueur Sépale:</label>
+    <input type="text" id="sepalLength" name="sepalLength" required><br>
+
+    <label for="sepalWidth">Largeur Sépale:</label>
+    <input type="text" id="sepalWidth" name="sepalWidth" required><br>
+
+    <label for="petalLength">Longueur Pétale:</label>
+    <input type="text" id="petalLength" name="petalLength" required><br>
+
+    <label for="petalWidth">Largeur Pétale:</label>
+    <input type="text" id="petalWidth" name="petalWidth" required><br>
+
+    <button type="button" onclick="predictFlower()">Predict Flower</button>
+</form>
+
+<script>
+function predictFlower() {
+    // Retrieve input values
+    var sepalLength = parseFloat(document.getElementById("sepalLength").value);
+    var sepalWidth = parseFloat(document.getElementById("sepalWidth").value);
+    var petalLength = parseFloat(document.getElementById("petalLength").value);
+    var petalWidth = parseFloat(document.getElementById("petalWidth").value);
+
+    // Check if all inputs are valid numbers
+    if (isNaN(sepalLength) || isNaN(sepalWidth) || isNaN(petalLength) || isNaN(petalWidth)) {
+        alert("Please enter valid numeric values for all inputs.");
+        return;
+    }
+
+    // Prepare data to send to Flask
+    var data = {
+        "features": [sepalLength, sepalWidth, petalLength, petalWidth]
+    };
+
+    // Send POST request to Flask endpoint
+    $.ajax({
+        type: "POST",
+        url: "/",
+        contentType: "application/json;charset=UTF-8",
+        data: JSON.stringify(data),
+        success: function(response) {
+            // Handle the response from Flask
+            alert("Prediction: " + response.prediction);
+        },
+        error: function(error) {
+            alert("Error: " + JSON.stringify(error));
+        }
+    });
+}
+</script>
+
+</body>
+</html>
