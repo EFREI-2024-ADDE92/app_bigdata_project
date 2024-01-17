@@ -40,3 +40,5 @@ jobs:
         IMAGE_NAME: your-container-app
       run: |
         az containerapp create --resource-group $RESOURCE_GROUP --name $APP_NAME --image $ACR_NAME/$IMAGE_NAME:latest
+
+# dont forget login docker + azure
