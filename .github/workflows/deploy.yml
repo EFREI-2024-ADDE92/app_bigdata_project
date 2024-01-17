@@ -24,11 +24,11 @@ jobs:
     - name: Build and push Docker image to ACR
       env:
         ACR_NAME: efreibigdata.azurecr.io
-        IMAGE_NAME: your-container-app
+        IMAGE_NAME: iris-app-groupe7
         DOCKERFILE: Dockerfile
       run: |
         docker buildx create --use
-        docker buildx build --platform linux/amd64 -t $ACR_NAME/$IMAGE_NAME:latest -f $DOCKERFILE .
+        docker buildx build --platform linux/amd64 -t $ACR_NAME/$IMAGE_NAME:latest -f $DOCKERFILE . --push
         docker login $ACR_NAME -u efreibigdata -p ${{ secrets.REGISTRY_PASSWORD }}
         docker push $ACR_NAME/$IMAGE_NAME:latest
 
