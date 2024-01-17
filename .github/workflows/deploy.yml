@@ -1,4 +1,4 @@
-name: Deploy to Azure Container App
+name: Azure Container App Deployment
 
 on:
   push:
@@ -6,26 +6,37 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
-    env:
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-      REGISTRY_LOGIN_SERVER: efreibigdata.azurecr.io
-      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-      RESOURCE_GROUP: ADDE92-CTP
-      AZURE_APP_NAME: iris-knn-app-groupe-7
-
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-      - name: Build and deploy Container App
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          appSourcePath: ${{ github.workspace }}
-          acrName: efreibigdata
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and push Docker image to ACR
+      env:
+        ACR_NAME: efreibigdata.azurecr.io
+        IMAGE_NAME: your-container-app
+        DOCKERFILE: Dockerfile
+      run: |
+        docker buildx create --use
+        docker buildx build --platform linux/amd64 -t $ACR_NAME/$IMAGE_NAME:latest -f $DOCKERFILE .
+        docker login $ACR_NAME -u efreibigdata -p ${{ secrets.ACR_PASSWORD }}
+        docker push $ACR_NAME/$IMAGE_NAME:latest
+
+    - name: Deploy to Azure Container App
+      env:
+        RESOURCE_GROUP: ADDE92-CTP
+        APP_NAME: your-container-app
+        ACR_NAME: efreibigdata.azurecr.io
+        IMAGE_NAME: your-container-app
+      run: |
+        az containerapp create --resource-group $RESOURCE_GROUP --name $APP_NAME --image $ACR_NAME/$IMAGE_NAME:latest
