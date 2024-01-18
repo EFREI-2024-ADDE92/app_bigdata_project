@@ -7,6 +7,7 @@ WORKDIR /app
 # Copiez les fichiers requis dans le conteneur
 COPY requirements.txt .
 COPY app.py .
+COPY knn_model.joblib .
 
 # Installez les dépendances spécifiées dans requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt

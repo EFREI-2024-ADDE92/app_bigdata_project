@@ -19,7 +19,7 @@ y_pred = knn_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Précision du modèle : {accuracy * 100:.2f}%")
 
-model_filename = 'model/knn_model.joblib'
+model_filename = 'knn_model.joblib'
 joblib.dump(knn_model, model_filename)
 print(f"Modèle exporté avec succès en tant que {model_filename}")
 

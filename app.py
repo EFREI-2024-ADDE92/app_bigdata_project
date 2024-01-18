@@ -4,10 +4,6 @@ import numpy as np
 import sklearn
 import os
 
-# Get the absolute path to the 'knn_model.joblib' file
-model_path = os.path.join(os.path.dirname(__file__), 'model/knn_model.joblib')
-print(model_path)
-
 print('sklearn: {}'.format(sklearn.__version__))
 
 # 0 : setosa
@@ -16,8 +12,8 @@ print('sklearn: {}'.format(sklearn.__version__))
 
 app = Flask(__name__)
 
-model_filename = 'model/knn_model.joblib'
-knn_model = joblib.load(model_path)
+model_filename = 'knn_model.joblib'
+knn_model = joblib.load(model_filename)
 
 @app.route('/', methods=['GET', 'POST'])
 def predict():
