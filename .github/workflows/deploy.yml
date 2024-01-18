@@ -36,7 +36,7 @@ jobs:
     - name: Build and push Docker image to ACR
       env:
         REGISTRY_LOGIN_SERVER: efreibigdata.azurecr.io
-        IMAGE_NAME: iris-image-groupe7
+        IMAGE_NAME: iris-image-groupe7-v2
         DOCKERFILE: Dockerfile
       run: |
         docker buildx create --use
@@ -50,16 +50,16 @@ jobs:
         registryUsername: ${{ secrets.REGISTRY_USERNAME }}
         registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
         resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-        containerAppName: iris-image-groupe7
-        containerAppEnvironment: iris-image-groupe7-env
+        containerAppName: iris-image-groupe7-v2
+        containerAppEnvironment: iris-image-groupe7-v2-env
         targetPort: 5000
         location: 'francecentral'
-        imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/iris-image-groupe7:latest
+        imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/iris-image-groupe7-v2:latest
     
     - name: Update Auto-Scaling Configuration
       run: |
         az containerapp update \
-          --name iris-image-groupe7 \
+          --name iris-image-groupe7-v2 \
           --resource-group ${{ secrets.RESOURCE_GROUP }} \
           --scale-rule-name azure-http-rule \
           --scale-rule-http-concurrency 1

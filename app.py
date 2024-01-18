@@ -11,6 +11,7 @@ print('sklearn: {}'.format(sklearn.__version__))
 # 0 : setosa
 # 1 : versicolor 
 # 2 : virginica
+# test project
 
 app = Flask(__name__)
 
