@@ -63,4 +63,4 @@ def metrics():
     return Response(generate_latest(custom_registry), content_type='text/plain; version=0.0.4')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=False, port='5000')

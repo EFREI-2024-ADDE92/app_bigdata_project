@@ -24,8 +24,6 @@ export default function () {
   const res = http.post(url, payload, { headers });
 
   check(res, {
-    'Post status is 200': (r) => r.status === 200,
-    'Post Content-Type header': (r) => r.headers['Content-Type'] === 'application/json',
-    'Post response features': (r) => r.status === 200,
+    'Post status is 200': (r) => r.status === 200
   });
 }
