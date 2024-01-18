@@ -1,5 +1,5 @@
 # Utilisez une image légère de Python comme base
-FROM python:3.8-slim
+FROM python:3.9.7-buster
 
 # Définissez le répertoire de travail dans le conteneur
 WORKDIR /app
@@ -17,3 +17,4 @@ EXPOSE 5000
 
 # Spécifiez la commande à exécuter lors du démarrage du conteneur
 CMD ["python", "app.py"]
+
