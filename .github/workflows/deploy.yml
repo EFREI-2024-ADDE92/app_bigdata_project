@@ -13,6 +13,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Install Hadolint
+      run: |
+        wget -O /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64
+        chmod +x /usr/bin/hadolint
+
+    - name: Lint Dockerfile
+      run: hadolint Dockerfile
+
     - name: Login to Azure
       uses: azure/login@v1
       with:
