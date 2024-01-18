@@ -26,13 +26,13 @@ jobs:
 
     - name: Build and push Docker image to ACR
       env:
-        ACR_NAME: efreibigdata.azurecr.io
+        REGISTRY_LOGIN_SERVER: efreibigdata.azurecr.io
         IMAGE_NAME: iris-image-groupe7
         DOCKERFILE: Dockerfile
       run: |
         docker buildx create --use
-        docker build -t $ACR_NAME/$IMAGE_NAME:latest -f Dockerfile .
-        docker push $ACR_NAME/$IMAGE_NAME:latest
+        docker build -t $REGISTRY_LOGIN_SERVER/$IMAGE_NAME:latest -f Dockerfile .
+        docker push $REGISTRY_LOGIN_SERVER/$IMAGE_NAME:latest
 
     - name: Deploy to Azure Container App
       uses: azure/container-apps-deploy-action@v1
@@ -45,4 +45,4 @@ jobs:
         containerAppEnvironment: iris-image-groupe7-env
         targetPort: 8000
         location: 'francecentral'
-        imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/iris-image-groupe7:v1
+        imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/iris-image-groupe7:latest
