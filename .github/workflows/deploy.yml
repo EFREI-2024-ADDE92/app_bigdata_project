@@ -52,7 +52,7 @@ jobs:
         resourceGroup: ${{ secrets.RESOURCE_GROUP }}
         containerAppName: iris-image-groupe7
         containerAppEnvironment: iris-image-groupe7-env
-        targetPort: 5001
+        targetPort: 5000
         location: 'francecentral'
         imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/iris-image-groupe7:latest
     
