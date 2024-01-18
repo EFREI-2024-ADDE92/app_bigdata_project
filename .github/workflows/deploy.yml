@@ -35,12 +35,14 @@ jobs:
         docker push $ACR_NAME/$IMAGE_NAME:latest
 
     - name: Deploy to Azure Container App
-      env:
-        RESOURCE_GROUP: ADDE92-CTP
-        APP_NAME: irisappgroup7
-        ACR_NAME: efreibigdata.azurecr.io
-        IMAGE_NAME: iris-image-groupe7
-      run: |
-        az containerapp create --resource-group $RESOURCE_GROUP --name $APP_NAME --image $ACR_NAME/$IMAGE_NAME:latest
-
-# dont forget login docker and azure
+      uses: azure/container-apps-deploy-action@v1
+      with:
+        registryUrl: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+        registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
+        resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+        containerAppName: iris-image-groupe7
+        containerAppEnvironment: iris-image-groupe7-env
+        targetPort: 8000
+        location: 'francecentral'
+        imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/iris-image-groupe7:v1
