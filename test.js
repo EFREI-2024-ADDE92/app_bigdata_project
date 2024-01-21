@@ -15,7 +15,7 @@ export const options = {
 };
 
 export default function () {
-  const url = 'https://iris-image-groupe7.proudforest-49e58823.francecentral.azurecontainerapps.io';
+  const url = 'https://iris-image-groupe7-v2.victoriousocean-825b8292.francecentral.azurecontainerapps.io';
   const payload = JSON.stringify({
     features: [5.1, 3.5, 1.4, 0.2],
   });
@@ -24,6 +24,6 @@ export default function () {
   const res = http.post(url, payload, { headers });
 
   check(res, {
-    'Post status is 200': (r) => r.status === 200
+    'Post status is 200': (r) => r.status === 200,
   });
 }
